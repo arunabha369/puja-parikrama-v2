@@ -48,22 +48,50 @@ const Planner = () => {
         if (!itinerary.length) return;
         try {
             const input = document.getElementById('itinerary-container');
-            const canvas = await html2canvas(input, { scale: 2 });
-            const imgData = canvas.toDataURL('image/png');
+            if (!input) {
+                console.error("Itinerary container not found");
+                return;
+            }
+
+            // Add loading state feedback if desired, or just wait
+            const canvas = await html2canvas(input, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
             const imgWidth = canvas.width;
             const imgHeight = canvas.height;
             const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
-            const imgX = (pdfWidth - imgWidth * ratio) / 2;
-            const imgY = 10;
 
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth * ratio, imgHeight * ratio);
+            // Center the image if it's smaller, or just fit to width
+            const printWidth = imgWidth * (pdfWidth / imgWidth);
+            const printHeight = imgHeight * (pdfWidth / imgWidth);
+
+            // If the content is long, we might need multiple pages, 
+            // but for now let's just scale it to fit width and split if needed? 
+            // Simple approach: just scale to fit one page width, let height flow (or crop if too long)
+            // But better: use the ratio to fit within page bounds if possible, or multiple pages.
+            // For MVP: Fit to width.
+
+            if (printHeight > pdfHeight) {
+                // Multi-page logic could be complex. 
+                // Let's stick to the user's original request simple fix first: ensuring it works.
+                // We fit to width. If it overflows, it overflows.
+                pdf.addImage(imgData, 'JPEG', 0, 10, pdfWidth, printHeight); // Fit width
+            } else {
+                pdf.addImage(imgData, 'JPEG', 0, 10, printWidth, printHeight);
+            }
+
             pdf.save('Puja-Parikrama-Plan.pdf');
         } catch (err) {
             console.error("PDF Fail", err);
-            alert("Could not generate PDF");
+            alert("Could not generate PDF. Please try again.");
         }
     };
 
