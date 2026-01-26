@@ -53,39 +53,69 @@ const Planner = () => {
                 return;
             }
 
-            // Add loading state feedback if desired, or just wait
-            const canvas = await html2canvas(input, {
+            // 1. Create a Clone for Capture
+            // We clone the node to modify it (expand text) without affecting the UI
+            const clone = input.cloneNode(true);
+
+            // Expand descriptions in the clone (remove line-clamp)
+            const descriptions = clone.querySelectorAll('.line-clamp-2');
+            descriptions.forEach(el => {
+                el.classList.remove('line-clamp-2');
+                el.style.whiteSpace = 'normal';
+                el.style.overflow = 'visible';
+                el.style.display = 'block';
+            });
+
+            // Set clone width fixed to A4 proportion width for consistency or keeping original
+            // Let's just enforce a white background and generous padding
+            clone.style.width = '800px';
+            clone.style.padding = '20px';
+            clone.style.background = '#ffffff';
+            clone.style.position = 'absolute';
+            clone.style.top = '-9999px';
+            clone.style.left = '0';
+            clone.style.zIndex = '9999';
+
+            document.body.appendChild(clone);
+
+            // 2. Capture with html2canvas
+            const canvas = await html2canvas(clone, {
                 scale: 2,
                 useCORS: true,
                 logging: false,
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                windowWidth: 800
             });
 
+            document.body.removeChild(clone); // Cleanup
+
+            // 3. Generate PDF with Pagination
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = pdf.internal.pageSize.getHeight();
+
             const imgWidth = canvas.width;
             const imgHeight = canvas.height;
-            const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
 
-            // Center the image if it's smaller, or just fit to width
-            const printWidth = imgWidth * (pdfWidth / imgWidth);
-            const printHeight = imgHeight * (pdfWidth / imgWidth);
+            // Map 1px on canvas to PDF units
+            const imgWidthMm = pdfWidth;
+            const imgHeightMm = (imgHeight * pdfWidth) / imgWidth;
 
-            // If the content is long, we might need multiple pages, 
-            // but for now let's just scale it to fit width and split if needed? 
-            // Simple approach: just scale to fit one page width, let height flow (or crop if too long)
-            // But better: use the ratio to fit within page bounds if possible, or multiple pages.
-            // For MVP: Fit to width.
+            let heightLeft = imgHeightMm;
+            let position = 0;
+            const pageHeight = pdfHeight;
 
-            if (printHeight > pdfHeight) {
-                // Multi-page logic could be complex. 
-                // Let's stick to the user's original request simple fix first: ensuring it works.
-                // We fit to width. If it overflows, it overflows.
-                pdf.addImage(imgData, 'JPEG', 0, 10, pdfWidth, printHeight); // Fit width
-            } else {
-                pdf.addImage(imgData, 'JPEG', 0, 10, printWidth, printHeight);
+            // First page
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidthMm, imgHeightMm);
+            heightLeft -= pageHeight;
+
+            // Subsequent pages
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeightMm; // Move image up
+                pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', 0, position, imgWidthMm, imgHeightMm);
+                heightLeft -= pageHeight;
             }
 
             pdf.save('Puja-Parikrama-Plan.pdf');
