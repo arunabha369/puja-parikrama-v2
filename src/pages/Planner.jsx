@@ -47,45 +47,28 @@ const Planner = () => {
     const handleDownloadPDF = async () => {
         if (!itinerary.length) return;
         try {
-            const input = document.getElementById('itinerary-container');
-            if (!input) {
-                console.error("Itinerary container not found");
-                return;
-            }
+            // Create a dedicated off-screen container for the PDF content
+            const printContainer = document.createElement('div');
+            printContainer.style.position = 'fixed';
+            printContainer.style.top = '-9999px';
+            printContainer.style.left = '0';
+            printContainer.style.width = '800px'; // Fixed width for consistent high-res output
+            printContainer.style.zIndex = '10000';
+            printContainer.style.backgroundColor = '#ffffff';
 
-            // 1. Create a Clone for Capture
-            // We clone the node to modify it (expand text) without affecting the UI
-            const clone = input.cloneNode(true);
+            // Calculate summaries
+            const totalDistance = itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1);
+            const startPointLabel = STARTING_POINTS[startPointKey]?.label || startPointKey;
+            const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
-            // Expand descriptions in the clone (remove line-clamp)
-            const descriptions = clone.querySelectorAll('.line-clamp-2');
-            descriptions.forEach(el => {
-                el.classList.remove('line-clamp-2');
-                el.style.whiteSpace = 'normal';
-                el.style.overflow = 'visible';
-                el.style.display = 'block';
-                // Create a dedicated off-screen container for the PDF content
-                const printContainer = document.createElement('div');
-                printContainer.style.position = 'fixed';
-                printContainer.style.top = '-9999px';
-                printContainer.style.left = '0';
-                printContainer.style.width = '800px'; // Fixed width for consistent high-res output
-                printContainer.style.zIndex = '10000';
-                printContainer.style.backgroundColor = '#ffffff';
+            // Helper to format time
+            const fmt = (d) => d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-                // Calculate summaries
-                const totalDistance = itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1);
-                const startPointLabel = STARTING_POINTS[startPointKey]?.label || startPointKey;
-                const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            // Build the HTML content (Tailwind classes will work if we append to body)
+            // We use inline styles for critical layout safety, but tailwind classes for styling
+            printContainer.className = "font-sans text-gray-900 bg-white";
 
-                // Helper to format time
-                const fmt = (d) => d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-                // Build the HTML content (Tailwind classes will work if we append to body)
-                // We use inline styles for critical layout safety, but tailwind classes for styling
-                printContainer.className = "font-sans text-gray-900 bg-white";
-
-                printContainer.innerHTML = `
+            printContainer.innerHTML = `
                 <div class="p-12 bg-white min-h-[1100px] relative">
                     <!-- Decor -->
                     <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 to-red-600"></div>
@@ -155,161 +138,161 @@ const Planner = () => {
                 </div>
             `;
 
-                document.body.appendChild(printContainer);
+            document.body.appendChild(printContainer);
 
-                // Wait for images or fonts if necessary (usually robust enough with timeout or check)
-                // Using a small timeout to ensure DOM render cycle completes
-                await new Promise(resolve => setTimeout(resolve, 100));
+            // Wait for images or fonts if necessary (usually robust enough with timeout or check)
+            // Using a small timeout to ensure DOM render cycle completes
+            await new Promise(resolve => setTimeout(resolve, 100));
 
-                const canvas = await html2canvas(printContainer, {
-                    scale: 2, // High resolution
-                    useCORS: true,
-                    logging: false,
-                    backgroundColor: '#ffffff',
-                    windowWidth: 800
-                });
+            const canvas = await html2canvas(printContainer, {
+                scale: 2, // High resolution
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff',
+                windowWidth: 800
+            });
 
-                document.body.removeChild(printContainer);
+            document.body.removeChild(printContainer);
 
-                const imgData = canvas.toDataURL('image/jpeg', 0.95);
-                const pdf = new jsPDF('p', 'mm', 'a4');
-                const pdfWidth = pdf.internal.pageSize.getWidth();   // 210mm
-                const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();   // 210mm
+            const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-                const imgWidth = canvas.width;
-                const imgHeight = canvas.height;
+            const imgWidth = canvas.width;
+            const imgHeight = canvas.height;
 
-                const imgWidthMm = pdfWidth;
-                const imgHeightMm = (imgHeight * pdfWidth) / imgWidth;
+            const imgWidthMm = pdfWidth;
+            const imgHeightMm = (imgHeight * pdfWidth) / imgWidth;
 
-                let heightLeft = imgHeightMm;
-                let position = 0;
+            let heightLeft = imgHeightMm;
+            let position = 0;
 
-                // First Page
+            // First Page
+            pdf.addImage(imgData, 'JPEG', 0, position, imgWidthMm, imgHeightMm);
+            heightLeft -= pdfHeight;
+
+            // Multi-page
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeightMm;
+                pdf.addPage();
                 pdf.addImage(imgData, 'JPEG', 0, position, imgWidthMm, imgHeightMm);
                 heightLeft -= pdfHeight;
-
-                // Multi-page
-                while (heightLeft > 0) {
-                    position = heightLeft - imgHeightMm;
-                    pdf.addPage();
-                    pdf.addImage(imgData, 'JPEG', 0, position, imgWidthMm, imgHeightMm);
-                    heightLeft -= pdfHeight;
-                }
-
-                pdf.save('Puja-Parikrama-Plan.pdf');
-            } catch (err) {
-                console.error("PDF Fail", err);
-                alert("Could not generate PDF. Please try again.");
             }
-        };
 
-        const gmapsUrl = generateGoogleMapsUrl(itinerary, startPointKey);
-
-        return (
-            <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-                <Helmet>
-                    <title>Planner | Puja Parikrama</title>
-                    <meta name="description" content="Generate your custom Durga Puja hopping itinerary with travel times and distances." />
-                </Helmet>
-                <Navbar />
-
-                <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
-
-                    <div className="max-w-6xl mx-auto">
-                        {/* Header */}
-                        <div className="text-center mb-10">
-                            <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif">Plan Your Divine Route</h1>
-                            <p className="text-gray-600">Enter your preferences and let us guide you to the Goddess.</p>
-                        </div>
-
-                        <div className="grid lg:grid-cols-3 gap-8">
-                            {/* Form Section */}
-                            <div className="lg:col-span-1">
-                                <PlannerForm onGenerate={handleGenerate} />
-
-                                {generated && (
-                                    <div className="mt-6 text-center">
-                                        <button
-                                            onClick={handleReset}
-                                            className="text-orange-600 hover:text-orange-700 font-medium flex items-center justify-center gap-2 mx-auto"
-                                        >
-                                            <RotateCcw className="w-4 h-4" /> Start Over
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Results Section */}
-                            <div className="lg:col-span-2">
-                                {!generated ? (
-                                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center h-full flex flex-col items-center justify-center min-h-[400px]">
-                                        <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-4">
-                                            <MapIcon className="w-8 h-8 text-orange-300" />
-                                        </div>
-                                        <h3 className="text-xl font-semibold text-gray-400 mb-2">Your Itinerary Awaits</h3>
-                                        <p className="text-gray-400 max-w-sm">Complete the form to generate a customized pandal hopping schedule.</p>
-                                    </div>
-                                ) : (
-                                    <div ref={resultsRef} className="space-y-6 animate-fade-in-up">
-
-                                        {/* Map Preview */}
-                                        <div className="h-64 md:h-80 w-full rounded-2xl overflow-hidden shadow-md border border-gray-200 relative z-0">
-                                            <MapComponent itinerary={itinerary} startPointCoords={startCoords} />
-                                        </div>
-
-                                        {/* Stats & Actions */}
-                                        <div className="bg-orange-600 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
-                                            <div className="text-center md:text-left">
-                                                <div className="text-sm opacity-90">Total Pandals</div>
-                                                <div className="text-3xl font-bold">{itinerary.length}</div>
-                                            </div>
-                                            <div className="h-8 w-px bg-white/20 hidden md:block"></div>
-                                            <div className="text-center md:text-left">
-                                                <div className="text-sm opacity-90">Walking Distance</div>
-                                                <div className="text-3xl font-bold">{itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1)} <span className="text-base font-normal">km</span></div>
-                                            </div>
-
-                                            <div className="flex gap-3">
-                                                <a
-                                                    href={gmapsUrl}
-                                                    target="_blank"
-                                                    rel="noreferrer"
-                                                    className="bg-white text-orange-600 hover:bg-orange-50 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
-                                                >
-                                                    <MapIcon className="w-4 h-4" /> Route
-                                                </a>
-                                                <button
-                                                    onClick={handleDownloadPDF}
-                                                    className="bg-orange-700 hover:bg-orange-800 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
-                                                >
-                                                    <Download className="w-4 h-4" /> PDF
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        {/* List */}
-                                        <div id="itinerary-container" className="pt-2 bg-gray-50">
-                                            {itinerary.length === 0 ? (
-                                                <div className="text-center py-10 text-gray-500">
-                                                    No pandals found fitting your time constraints. Try extending your time!
-                                                </div>
-                                            ) : (
-                                                itinerary.map((pandal, idx) => (
-                                                    <ResultCard key={idx} pandal={pandal} index={idx} isFirst={idx === 0} />
-                                                ))
-                                            )}
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </main>
-
-                <Footer />
-            </div>
-        );
+            pdf.save('Puja-Parikrama-Plan.pdf');
+        } catch (err) {
+            console.error("PDF Fail", err);
+            alert("Could not generate PDF. Please try again.");
+        }
     };
 
-    export default Planner;
+    const gmapsUrl = generateGoogleMapsUrl(itinerary, startPointKey);
+
+    return (
+        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+            <Helmet>
+                <title>Planner | Puja Parikrama</title>
+                <meta name="description" content="Generate your custom Durga Puja hopping itinerary with travel times and distances." />
+            </Helmet>
+            <Navbar />
+
+            <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
+
+                <div className="max-w-6xl mx-auto">
+                    {/* Header */}
+                    <div className="text-center mb-10">
+                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif">Plan Your Divine Route</h1>
+                        <p className="text-gray-600">Enter your preferences and let us guide you to the Goddess.</p>
+                    </div>
+
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        {/* Form Section */}
+                        <div className="lg:col-span-1">
+                            <PlannerForm onGenerate={handleGenerate} />
+
+                            {generated && (
+                                <div className="mt-6 text-center">
+                                    <button
+                                        onClick={handleReset}
+                                        className="text-orange-600 hover:text-orange-700 font-medium flex items-center justify-center gap-2 mx-auto"
+                                    >
+                                        <RotateCcw className="w-4 h-4" /> Start Over
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Results Section */}
+                        <div className="lg:col-span-2">
+                            {!generated ? (
+                                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center h-full flex flex-col items-center justify-center min-h-[400px]">
+                                    <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-4">
+                                        <MapIcon className="w-8 h-8 text-orange-300" />
+                                    </div>
+                                    <h3 className="text-xl font-semibold text-gray-400 mb-2">Your Itinerary Awaits</h3>
+                                    <p className="text-gray-400 max-w-sm">Complete the form to generate a customized pandal hopping schedule.</p>
+                                </div>
+                            ) : (
+                                <div ref={resultsRef} className="space-y-6 animate-fade-in-up">
+
+                                    {/* Map Preview */}
+                                    <div className="h-64 md:h-80 w-full rounded-2xl overflow-hidden shadow-md border border-gray-200 relative z-0">
+                                        <MapComponent itinerary={itinerary} startPointCoords={startCoords} />
+                                    </div>
+
+                                    {/* Stats & Actions */}
+                                    <div className="bg-orange-600 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+                                        <div className="text-center md:text-left">
+                                            <div className="text-sm opacity-90">Total Pandals</div>
+                                            <div className="text-3xl font-bold">{itinerary.length}</div>
+                                        </div>
+                                        <div className="h-8 w-px bg-white/20 hidden md:block"></div>
+                                        <div className="text-center md:text-left">
+                                            <div className="text-sm opacity-90">Walking Distance</div>
+                                            <div className="text-3xl font-bold">{itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1)} <span className="text-base font-normal">km</span></div>
+                                        </div>
+
+                                        <div className="flex gap-3">
+                                            <a
+                                                href={gmapsUrl}
+                                                target="_blank"
+                                                rel="noreferrer"
+                                                className="bg-white text-orange-600 hover:bg-orange-50 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                                            >
+                                                <MapIcon className="w-4 h-4" /> Route
+                                            </a>
+                                            <button
+                                                onClick={handleDownloadPDF}
+                                                className="bg-orange-700 hover:bg-orange-800 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                                            >
+                                                <Download className="w-4 h-4" /> PDF
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    {/* List */}
+                                    <div id="itinerary-container" className="pt-2 bg-gray-50">
+                                        {itinerary.length === 0 ? (
+                                            <div className="text-center py-10 text-gray-500">
+                                                No pandals found fitting your time constraints. Try extending your time!
+                                            </div>
+                                        ) : (
+                                            itinerary.map((pandal, idx) => (
+                                                <ResultCard key={idx} pandal={pandal} index={idx} isFirst={idx === 0} />
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </main>
+
+            <Footer />
+        </div>
+    );
+};
+
+export default Planner;
