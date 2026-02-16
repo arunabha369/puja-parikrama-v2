@@ -3,6 +3,7 @@ import HeroSection from '../components/HeroSection';
 import Features from '../components/Features';
 import HowItWorks from '../components/HowItWorks';
 import CTASection from '../components/CTASection';
+import Roadmaps from '../components/Roadmaps';
 
 const Home = () => {
     return (
@@ -12,6 +13,7 @@ const Home = () => {
                 <meta name="description" content="Plan your Durga Puja parikrama with precision. Create optimized schedules based on date, location & temples." />
             </Helmet>
             <HeroSection />
+            <Roadmaps />
             <Features />
             <HowItWorks />
             <CTASection />

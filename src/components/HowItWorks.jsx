@@ -1,18 +1,18 @@
 const steps = [
     {
-        id: 1,
-        title: "Select Details",
-        description: "Choose your date, start time, and preferred general location in Kolkata."
+        id: '01',
+        title: "Choose Your Divine Theme",
+        description: "Select a deity to transform the entire digital experience. Each theme brings a unique atmosphere."
     },
     {
-        id: 2,
-        title: "Explore Pandals",
-        description: "We list the best pandals optimized for your route and walking speed."
+        id: '02',
+        title: "Explore or Plan",
+        description: "Choose to virtually explore the pandals through our gallery or start planning your actual visitation route."
     },
     {
-        id: 3,
-        title: "Get Your Plan",
-        description: "Receive a complete, timed itinerary ready for your spiritual journey."
+        id: '03',
+        title: "Experience the Magic",
+        description: "Get a curated list of pandals or a fully optimized itinerary complete with maps and timings."
     }
 ];
 

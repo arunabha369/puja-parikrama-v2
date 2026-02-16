@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { usePuja } from '../context/PujaContext';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
 const PujaSelector = () => {
     const { themes, setSelectedPuja, setPreviewTheme } = usePuja();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const mode = searchParams.get('mode'); // 'view' or 'plan' (default)
+
+    const handleSelect = (id) => {
+        setSelectedPuja(id);
+        if (mode === 'view') {
+            navigate('/temples');
+        } else {
+            navigate('/planner');
+        }
+    };
 
     const handleMouseMove = (e, id) => {
         const card = e.currentTarget;
@@ -43,7 +57,7 @@ const PujaSelector = () => {
                 {Object.values(themes).map((theme, index) => (
                     <div
                         key={theme.id}
-                        onClick={() => setSelectedPuja(theme.id)}
+                        onClick={() => handleSelect(theme.id)}
                         onMouseEnter={() => setPreviewTheme(theme.id)}
                         onMouseMove={(e) => handleMouseMove(e, theme.id)}
                         onMouseLeave={handleMouseLeave}

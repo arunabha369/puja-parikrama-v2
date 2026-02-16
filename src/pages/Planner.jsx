@@ -20,7 +20,7 @@ const Planner = () => {
 
     // Redirect if no puja selected
     if (!selectedPuja) {
-        return <Navigate to="/select-puja" replace />;
+        return <Navigate to="/select-puja?mode=plan" replace />;
     }
 
     const handleGenerate = ({ area, startPoint, startTime, endTime }) => {

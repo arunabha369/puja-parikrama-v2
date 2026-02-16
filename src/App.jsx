@@ -8,6 +8,8 @@ import LiquidBackground from './components/LiquidBackground';
 import PujaSelector from './components/PujaSelector';
 import { PujaProvider } from './context/PujaContext';
 
+import Temples from './pages/Temples';
+
 const AppContent = () => {
   return (
     <Router>
@@ -18,6 +20,7 @@ const AppContent = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/select-puja" element={<PujaSelector />} />
+              <Route path="/temples" element={<Temples />} />
               <Route path="/planner" element={<Planner />} />
             </Routes>
           </main>

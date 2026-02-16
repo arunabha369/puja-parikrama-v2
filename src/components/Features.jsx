@@ -1,25 +1,25 @@
-import { Calendar, Map, Bell, Smartphone } from 'lucide-react';
+import { Map, Clock, Search, Image } from 'lucide-react';
 
 const features = [
     {
-        icon: <Calendar className="h-6 w-6 text-yellow-400" />,
-        title: "Smart Puja Planner",
-        description: "Automatically schedules pandal visits based on your start time and location."
+        icon: <Map className="w-6 h-6 text-white" />,
+        title: "Smart Itinerary Planning",
+        description: "Create the perfect route based on your starting point and available time. We optimize your path to minimize travel time."
     },
     {
-        icon: <Map className="h-6 w-6 text-yellow-400" />,
-        title: "Temple-wise Planning",
-        description: "Select from North, South, or convert your location to find nearby pujas."
+        icon: <Image className="w-6 h-6 text-white" />,
+        title: "Visual Pandal Gallery",
+        description: "Explore puja pandals visually before you visit. Browse through our curated gallery to decide your must-visit destinations."
     },
     {
-        icon: <Bell className="h-6 w-6 text-yellow-400" />,
-        title: "Auspicious Timings",
-        description: "Our algorithm respects optimal viewing hour estimations for a divine experience."
+        icon: <Search className="w-6 h-6 text-white" />,
+        title: "Search & Discover",
+        description: "Find specific pandals by name, location, or district. Our powerful search helps you locate your favorite pujas instantly."
     },
     {
-        icon: <Smartphone className="h-6 w-6 text-yellow-400" />,
-        title: "Mobile Friendly",
-        description: "Plan your parikrama on the go. Optimized for all devices and screen sizes."
+        icon: <Clock className="w-6 h-6 text-white" />,
+        title: "Real-time Optimization",
+        description: "Our algorithms account for walking distances and estimated visit times to ensure you cover the maximum pandals."
     }
 ];
 

@@ -9,17 +9,26 @@ const CTASection = () => {
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-500/20 blur-3xl rounded-full -z-10"></div>
 
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel text-glow">
-                        Begin your spiritual journey today
+                        Your Divine Journey Awaits
                     </h2>
-                    <p className="text-xl text-white/80 mb-10 font-light">
-                        Join thousands of devotees planning their perfect Durga Puja parikrama.
+                    <p className="text-xl text-white/80 mb-10 font-light max-w-2xl mx-auto">
+                        Choose your path: plan a detailed itinerary or virtually explore the magnificent pandals of Kolkata.
                     </p>
-                    <Link
-                        to="/planner"
-                        className="btn-liquid inline-block text-lg"
-                    >
-                        Start Planning Now
-                    </Link>
+
+                    <div className="flex flex-col sm:flex-row justify-center gap-6">
+                        <Link
+                            to="/select-puja?mode=plan"
+                            className="btn-liquid inline-flex items-center justify-center gap-2 text-lg"
+                        >
+                            Start Planning
+                        </Link>
+                        <Link
+                            to="/select-puja?mode=view"
+                            className="glass-panel px-8 py-3 rounded-full text-lg font-medium text-white hover:bg-white/10 transition-all border border-white/20 flex items-center justify-center gap-2 hover:border-white/40"
+                        >
+                            Explore Temples
+                        </Link>
+                    </div>
                 </div>
             </div>
 
