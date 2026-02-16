@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { STARTING_POINTS } from '../utils/plannerLogic';
 import { MapPin, Clock } from 'lucide-react';
 
@@ -9,16 +9,18 @@ const PlannerForm = ({ onGenerate }) => {
     const [endTime, setEndTime] = useState('22:00');
 
     // Filter starting points based on area
-    const availableStartPoints = Object.entries(STARTING_POINTS).filter(
-        ([key, point]) => point.area === area || point.area === 'All'
-    );
+    const availableStartPoints = useMemo(() => {
+        return Object.entries(STARTING_POINTS).filter(
+            ([, point]) => point.area === area || point.area === 'All' // Removed unused 'key'
+        );
+    }, [area]);
 
     // Reset/Set default start point when area changes
     useEffect(() => {
         if (availableStartPoints.length > 0) {
             setStartPoint(availableStartPoints[0][0]);
         }
-    }, [area]);
+    }, [availableStartPoints]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -26,25 +28,25 @@ const PlannerForm = ({ onGenerate }) => {
     };
 
     return (
-        <div className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-orange-100">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
-                <MapPin className="h-6 w-6 text-orange-600" />
-                Customize Your Parikrama
+        <div className="glass-panel p-6 md:p-8 rounded-2xl relative overflow-hidden">
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2 font-cinzel">
+                <MapPin className="h-6 w-6 text-yellow-400" />
+                Customize Parikrama
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 {/* Area Selection */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Which part of Kolkata?</label>
-                    <div className="flex gap-4 p-1 bg-gray-100 rounded-lg">
+                    <label className="block text-sm font-medium text-white/80 mb-3">Which part of Kolkata?</label>
+                    <div className="flex gap-4 p-1 bg-black/20 rounded-lg">
                         {['North', 'South'].map((opt) => (
                             <button
                                 key={opt}
                                 type="button"
                                 onClick={() => setArea(opt)}
                                 className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 ${area === opt
-                                        ? 'bg-white text-orange-600 shadow-sm ring-1 ring-orange-200'
-                                        : 'text-gray-500 hover:text-gray-700'
+                                    ? 'bg-white/10 text-yellow-400 shadow-sm ring-1 ring-white/20'
+                                    : 'text-white/40 hover:text-white/70'
                                     }`}
                             >
                                 {opt} Kolkata
@@ -55,12 +57,12 @@ const PlannerForm = ({ onGenerate }) => {
 
                 {/* Start Point */}
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Starting Point</label>
+                    <label className="block text-sm font-medium text-white/80 mb-2">Starting Point</label>
                     <div className="relative">
                         <select
                             value={startPoint}
                             onChange={(e) => setStartPoint(e.target.value)}
-                            className="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-3 pr-10 appearance-none shadow-sm"
+                            className="w-full bg-white/10 border border-white/10 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-3 pr-10 appearance-none shadow-sm [&>option]:bg-gray-900"
                         >
                             {availableStartPoints.map(([key, point]) => (
                                 <option key={key} value={key}>
@@ -68,7 +70,7 @@ const PlannerForm = ({ onGenerate }) => {
                                 </option>
                             ))}
                         </select>
-                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-500">
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-white/50">
                             <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                         </div>
                     </div>
@@ -77,27 +79,27 @@ const PlannerForm = ({ onGenerate }) => {
                 {/* Time Selection */}
                 <div className="grid grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Start Time</label>
+                        <label className="block text-sm font-medium text-white/80 mb-2">Start Time</label>
                         <div className="relative">
                             <input
                                 type="time"
                                 value={startTime}
                                 onChange={(e) => setStartTime(e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2.5 pl-10"
+                                className="w-full bg-white/10 border border-white/10 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-2.5 pl-10 [color-scheme:dark]"
                             />
-                            <Clock className="absolute left-3 top-3 h-4 w-4 text-gray-400 pointer-events-none" />
+                            <Clock className="absolute left-3 top-3 h-4 w-4 text-white/50 pointer-events-none" />
                         </div>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">End Time</label>
+                        <label className="block text-sm font-medium text-white/80 mb-2">End Time</label>
                         <div className="relative">
                             <input
                                 type="time"
                                 value={endTime}
                                 onChange={(e) => setEndTime(e.target.value)}
-                                className="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block p-2.5 pl-10"
+                                className="w-full bg-white/10 border border-white/10 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-2.5 pl-10 [color-scheme:dark]"
                             />
-                            <Clock className="absolute left-3 top-3 h-4 w-4 text-gray-400 pointer-events-none" />
+                            <Clock className="absolute left-3 top-3 h-4 w-4 text-white/50 pointer-events-none" />
                         </div>
                     </div>
                 </div>
@@ -105,7 +107,7 @@ const PlannerForm = ({ onGenerate }) => {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transform transition-all duration-200 hover:-translate-y-0.5 hover:shadow-orange-500/25 flex items-center justify-center gap-2"
+                    className="btn-liquid w-full flex items-center justify-center gap-2"
                 >
                     Check My Plan
                 </button>

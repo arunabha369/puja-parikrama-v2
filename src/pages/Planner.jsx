@@ -1,12 +1,10 @@
 import { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import PlannerForm from '../components/PlannerForm';
 import ResultCard from '../components/ResultCard';
 import MapComponent from '../components/MapComponent';
 import { generateSortedList, applyTimings, STARTING_POINTS, generateGoogleMapsUrl } from '../utils/plannerLogic';
-import { Download, Share2, Map as MapIcon, RotateCcw } from 'lucide-react';
+import { Download, Map as MapIcon, RotateCcw } from 'lucide-react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
@@ -190,20 +188,19 @@ const Planner = () => {
     const gmapsUrl = generateGoogleMapsUrl(itinerary, startPointKey);
 
     return (
-        <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+        <div className="relative z-10 flex flex-col font-sans">
             <Helmet>
                 <title>Planner | Puja Parikrama</title>
                 <meta name="description" content="Generate your custom Durga Puja hopping itinerary with travel times and distances." />
             </Helmet>
-            <Navbar />
 
             <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
 
                 <div className="max-w-6xl mx-auto">
                     {/* Header */}
                     <div className="text-center mb-10">
-                        <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2 font-serif">Plan Your Divine Route</h1>
-                        <p className="text-gray-600">Enter your preferences and let us guide you to the Goddess.</p>
+                        <h1 className="text-4xl md:text-5xl font-bold text-white mb-2 font-cinzel text-glow">Plan Your Divine Route</h1>
+                        <p className="text-white/80 font-light">Enter your preferences and let us guide you to the Goddess.</p>
                     </div>
 
                     <div className="grid lg:grid-cols-3 gap-8">
@@ -215,7 +212,7 @@ const Planner = () => {
                                 <div className="mt-6 text-center">
                                     <button
                                         onClick={handleReset}
-                                        className="text-orange-600 hover:text-orange-700 font-medium flex items-center justify-center gap-2 mx-auto"
+                                        className="text-white hover:text-yellow-400 font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
                                     >
                                         <RotateCcw className="w-4 h-4" /> Start Over
                                     </button>
@@ -226,31 +223,31 @@ const Planner = () => {
                         {/* Results Section */}
                         <div className="lg:col-span-2">
                             {!generated ? (
-                                <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-12 text-center h-full flex flex-col items-center justify-center min-h-[400px]">
-                                    <div className="w-16 h-16 bg-orange-50 rounded-full flex items-center justify-center mb-4">
-                                        <MapIcon className="w-8 h-8 text-orange-300" />
+                                <div className="glass-panel rounded-2xl p-12 text-center h-full flex flex-col items-center justify-center min-h-[400px]">
+                                    <div className="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mb-4 border border-white/10">
+                                        <MapIcon className="w-8 h-8 text-white/60" />
                                     </div>
-                                    <h3 className="text-xl font-semibold text-gray-400 mb-2">Your Itinerary Awaits</h3>
-                                    <p className="text-gray-400 max-w-sm">Complete the form to generate a customized pandal hopping schedule.</p>
+                                    <h3 className="text-xl font-semibold text-white/60 mb-2">Your Itinerary Awaits</h3>
+                                    <p className="text-white/40 max-w-sm">Complete the form to generate a customized pandal hopping schedule.</p>
                                 </div>
                             ) : (
                                 <div ref={resultsRef} className="space-y-6 animate-fade-in-up">
 
                                     {/* Map Preview */}
-                                    <div className="h-64 md:h-80 w-full rounded-2xl overflow-hidden shadow-md border border-gray-200 relative z-0">
+                                    <div className="h-64 md:h-80 w-full rounded-2xl overflow-hidden shadow-lg border border-white/20 relative z-0">
                                         <MapComponent itinerary={itinerary} startPointCoords={startCoords} />
                                     </div>
 
                                     {/* Stats & Actions */}
-                                    <div className="bg-orange-600 text-white p-6 rounded-2xl shadow-lg flex flex-col md:flex-row justify-between items-center gap-4">
+                                    <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-orange-600/80 to-red-600/80 border-none">
                                         <div className="text-center md:text-left">
-                                            <div className="text-sm opacity-90">Total Pandals</div>
-                                            <div className="text-3xl font-bold">{itinerary.length}</div>
+                                            <div className="text-sm text-yellow-100 opacity-90">Total Pandals</div>
+                                            <div className="text-3xl font-bold text-white">{itinerary.length}</div>
                                         </div>
                                         <div className="h-8 w-px bg-white/20 hidden md:block"></div>
                                         <div className="text-center md:text-left">
-                                            <div className="text-sm opacity-90">Walking Distance</div>
-                                            <div className="text-3xl font-bold">{itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1)} <span className="text-base font-normal">km</span></div>
+                                            <div className="text-sm text-yellow-100 opacity-90">Walking Distance</div>
+                                            <div className="text-3xl font-bold text-white">{itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1)} <span className="text-base font-normal">km</span></div>
                                         </div>
 
                                         <div className="flex gap-3">
@@ -264,7 +261,7 @@ const Planner = () => {
                                             </a>
                                             <button
                                                 onClick={handleDownloadPDF}
-                                                className="bg-orange-700 hover:bg-orange-800 text-white px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
+                                                className="bg-black/20 hover:bg-black/30 text-white border border-white/20 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
                                             >
                                                 <Download className="w-4 h-4" /> PDF
                                             </button>
@@ -272,9 +269,9 @@ const Planner = () => {
                                     </div>
 
                                     {/* List */}
-                                    <div id="itinerary-container" className="pt-2 bg-gray-50">
+                                    <div id="itinerary-container" className="pt-2">
                                         {itinerary.length === 0 ? (
-                                            <div className="text-center py-10 text-gray-500">
+                                            <div className="text-center py-10 text-white/60">
                                                 No pandals found fitting your time constraints. Try extending your time!
                                             </div>
                                         ) : (
@@ -289,8 +286,6 @@ const Planner = () => {
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </div>
     );
 };
