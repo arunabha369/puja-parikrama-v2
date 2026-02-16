@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Navigate } from 'react-router-dom';
+import { usePuja } from '../context/PujaContext';
 import PlannerForm from '../components/PlannerForm';
 import ResultCard from '../components/ResultCard';
 import MapComponent from '../components/MapComponent';
@@ -9,11 +11,17 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const Planner = () => {
+    const { selectedPuja } = usePuja();
     const [itinerary, setItinerary] = useState([]);
     const [generated, setGenerated] = useState(false);
     const [startCoords, setStartCoords] = useState(null);
     const [startPointKey, setStartPointKey] = useState('');
     const resultsRef = useRef(null);
+
+    // Redirect if no puja selected
+    if (!selectedPuja) {
+        return <Navigate to="/select-puja" replace />;
+    }
 
     const handleGenerate = ({ area, startPoint, startTime, endTime }) => {
         console.log("Generatiing plan...", { area, startPoint, startTime, endTime });

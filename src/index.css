@@ -87,6 +87,44 @@
     }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    90% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translateY(-100vh) translateX(20px);
+        opacity: 0;
+    }
+}
+
+@layer utilities {
+    .animate-float {
+        animation-name: float;
+        animation-timing-function: linear;
+        animation-iteration-count: infinite;
+    }
+}
+
 @keyframes fadeInDown {
     from {
         opacity: 0;

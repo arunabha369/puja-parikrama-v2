@@ -84,14 +84,17 @@ const PujaContext = createContext();
 
 export const PujaProvider = ({ children }) => {
     const [selectedPuja, setSelectedPuja] = useState(null); // Default null (Selector Screen)
+    const [previewTheme, setPreviewTheme] = useState(null); // For hover effects
 
     const currentTheme = useMemo(() => {
+        if (previewTheme) return THEMES[previewTheme];
         return THEMES[selectedPuja] || THEMES.durga; // Fallback to Durga if somehow undefined, but Selector handles null
-    }, [selectedPuja]);
+    }, [selectedPuja, previewTheme]);
 
     const value = {
         selectedPuja,
         setSelectedPuja,
+        setPreviewTheme, // Export setter
         currentTheme,
         themes: THEMES
     };

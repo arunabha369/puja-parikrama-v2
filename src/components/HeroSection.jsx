@@ -38,10 +38,13 @@ const HeroSection = () => {
                         <ArrowRight className="h-5 w-5" />
                     </Link>
 
-                    <button className="glass-panel px-8 py-3 rounded-full text-lg font-medium text-white hover:bg-white/10 transition-all border border-white/20 flex items-center justify-center gap-2 hover:border-white/40">
+                    <Link
+                        to="/select-puja"
+                        className="glass-panel px-8 py-3 rounded-full text-lg font-medium text-white hover:bg-white/10 transition-all border border-white/20 flex items-center justify-center gap-2 hover:border-white/40"
+                    >
                         <MapPin className="h-5 w-5 text-yellow-400" />
                         View Temples
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>
