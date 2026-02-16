@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X, Flower } from 'lucide-react';
+import { Menu, X, Flower, ArrowLeft } from 'lucide-react';
+import { usePuja } from '../context/PujaContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const { setSelectedPuja } = usePuja();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -31,6 +33,12 @@ const Navbar = () => {
                     </div>
 
                     <div className="hidden md:flex items-center space-x-8">
+                        <button
+                            onClick={() => setSelectedPuja(null)}
+                            className="text-white/60 hover:text-white flex items-center gap-2 text-sm font-medium transition-colors"
+                        >
+                            <ArrowLeft className="w-4 h-4" /> Change Puja
+                        </button>
                         <Link to="/" className="text-white/80 hover:text-white font-medium transition-colors relative group">
                             Home
                             <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full shadow-[0_0_8px_rgba(250,204,21,0.8)]"></span>
@@ -55,6 +63,12 @@ const Navbar = () => {
             {isOpen && (
                 <div className="md:hidden glass-panel mx-4 mt-2 rounded-xl overflow-hidden animate-fade-in-down">
                     <div className="px-4 pt-4 pb-6 space-y-4">
+                        <button
+                            onClick={() => { setSelectedPuja(null); setIsOpen(false); }}
+                            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-base font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                        >
+                            <ArrowLeft className="w-4 h-4" /> Change Puja
+                        </button>
                         <Link
                             to="/"
                             className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400 transition-colors"
