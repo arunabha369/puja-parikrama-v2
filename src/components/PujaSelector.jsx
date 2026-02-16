@@ -38,15 +38,25 @@ const PujaSelector = () => {
                         {/* Card Content */}
                         <div className="relative h-full glass-panel p-8 rounded-2xl flex flex-col items-center justify-center text-center transition-all duration-500 group-hover:-translate-y-2 group-hover:bg-white/10 border border-white/10 group-hover:border-white/30">
 
-                            {/* Decorative Circle */}
+                            {/* Decorative Circle / Image Container */}
                             <div
-                                className="w-20 h-20 rounded-full mb-6 flex items-center justify-center shadow-lg transition-transform duration-500 group-hover:scale-110"
+                                className="w-64 h-64 rounded-full mb-6 flex items-center justify-center transition-transform duration-500 group-hover:scale-105 overflow-hidden relative ring-0 outline-none"
                                 style={{
-                                    background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary})`,
-                                    boxShadow: `0 0 20px ${theme.colors.primary}60`
+                                    background: `transparent`,
                                 }}
                             >
-                                <Sparkles className="w-8 h-8 text-white" />
+                                <img
+                                    src={theme.image}
+                                    alt={theme.name}
+                                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity scale-110"
+                                    onError={(e) => {
+                                        e.target.style.display = 'none';
+                                        e.target.nextSibling.style.display = 'block';
+                                    }}
+                                />
+                                <div className="absolute inset-0 flex items-center justify-center hidden">
+                                    <Sparkles className="w-10 h-10 text-white" />
+                                </div>
                             </div>
 
                             <h3 className="text-2xl font-cinzel font-bold text-white mb-2 group-hover:text-glow transition-all">

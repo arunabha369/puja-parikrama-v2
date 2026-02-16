@@ -5,6 +5,7 @@ const THEMES = {
     durga: {
         id: 'durga',
         name: 'Durga Puja',
+        image: '/assets/pujas/durga.png',
         colors: {
             primary: '#991b1b', // Deep Red
             secondary: '#fbbf24', // Gold
@@ -16,6 +17,7 @@ const THEMES = {
     kali: {
         id: 'kali',
         name: 'Kali Puja',
+        image: '/assets/pujas/kali.png',
         colors: {
             primary: '#1e1b4b', // Midnight Blue
             secondary: '#7e22ce', // Electric Purple
@@ -27,6 +29,7 @@ const THEMES = {
     jagadhatri: {
         id: 'jagadhatri',
         name: 'Jagadhatri Puja',
+        image: '/assets/pujas/jagadhatri.png',
         colors: {
             primary: '#134e4a', // Royal Teal
             secondary: '#c2410c', // Burnt Orange
@@ -38,6 +41,7 @@ const THEMES = {
     kartik: {
         id: 'kartik',
         name: 'Kartik Puja',
+        image: '/assets/pujas/kartik.png',
         colors: {
             primary: '#1d4ed8', // Peacock Blue
             secondary: '#94a3b8', // Silver/Grey
@@ -49,6 +53,7 @@ const THEMES = {
     saraswati: {
         id: 'saraswati',
         name: 'Saraswati Puja',
+        image: '/assets/pujas/saraswati.png',
         colors: {
             primary: '#eab308', // Bright Yellow
             secondary: '#84cc16', // Spring Green
@@ -64,6 +69,7 @@ const THEMES = {
     rash: {
         id: 'rash',
         name: 'Santipur Rash',
+        image: '/assets/pujas/rash.png',
         colors: {
             primary: '#be185d', // Pink
             secondary: '#a78bfa', // Lavender
