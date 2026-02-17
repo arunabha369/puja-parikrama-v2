@@ -136,7 +136,7 @@ const Navbar = () => {
                         <div className="p-1.5 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-all duration-300">
                             <Flower className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
                         </div>
-                        <span className="font-cinzel font-bold text-lg md:text-xl text-white tracking-wide text-glow hidden sm:block">
+                        <span className="font-cinzel font-bold text-lg md:text-xl text-white tracking-wide text-glow block">
                             Puja Parikrama
                         </span>
                     </Link>
@@ -165,8 +165,8 @@ const Navbar = () => {
                                 href={item.link}
                                 onClick={item.action}
                                 className={`relative z-10 px-5 py-2 rounded-full text-sm font-medium transition-colors duration-300 ${activeSection === item.id
-                                        ? 'text-white'
-                                        : 'text-white/70 hover:text-white'
+                                    ? 'text-white'
+                                    : 'text-white/70 hover:text-white'
                                     }`}
                             >
                                 {item.label}
@@ -221,8 +221,8 @@ const Navbar = () => {
                                     setIsOpen(false);
                                 }}
                                 className={`block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${activeSection === item.id
-                                        ? 'text-white shadow-lg'
-                                        : 'text-white/70 hover:bg-white/5 hover:text-white'
+                                    ? 'text-white shadow-lg'
+                                    : 'text-white/70 hover:bg-white/5 hover:text-white'
                                     }`}
                                 style={activeSection === item.id ? { ...gradientStyle, boxShadow: `0 4px 15px -3px ${primaryColor}66` } : {}}
                             >
