@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Flower, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Menu, X, Flower, ArrowRight, ArrowLeft } from 'lucide-react';
 import { usePuja } from '../context/PujaContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
-    const { selectedPuja, setSelectedPuja } = usePuja();
+    const [activeSection, setActiveSection] = useState('home');
+    const { selectedPuja } = usePuja();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -18,22 +19,34 @@ const Navbar = () => {
         return '/select-puja?mode=plan';
     };
 
-    const scrollToRoadmaps = (e) => {
-        e.preventDefault();
+    const scrollToSection = (sectionId) => {
         if (location.pathname !== '/') {
-            navigate('/', { state: { scrollTo: 'roadmaps' } });
+            navigate('/', { state: { scrollTo: sectionId } });
         } else {
-            const element = document.getElementById('roadmaps');
-            if (element) element.scrollIntoView({ behavior: 'smooth' });
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                setActiveSection(sectionId);
+            } else if (sectionId === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setActiveSection('home');
+            }
         }
+    };
+
+    const handleNavClick = (e, sectionId) => {
+        e.preventDefault();
+        scrollToSection(sectionId);
     };
 
     // Handle scroll from other pages
     useEffect(() => {
-        if (location.state?.scrollTo === 'roadmaps') {
-            const element = document.getElementById('roadmaps');
+        if (location.state?.scrollTo) {
+            const sectionId = location.state.scrollTo;
+            const element = document.getElementById(sectionId);
             if (element) {
                 setTimeout(() => element.scrollIntoView({ behavior: 'smooth' }), 100);
+                setActiveSection(sectionId);
             }
             // Clear state to prevent scroll on refresh
             window.history.replaceState({}, document.title);
@@ -43,124 +56,156 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 20);
+
+            // Scroll spy logic
+            if (location.pathname === '/') {
+                const scrollPosition = window.scrollY + 100; // Offset
+                const sections = ['roadmaps', 'features'];
+                let current = 'home';
+
+                for (const section of sections) {
+                    const element = document.getElementById(section);
+                    if (element && element.offsetTop <= scrollPosition) {
+                        current = section;
+                    }
+                }
+                setActiveSection(current);
+            }
         };
+
         window.addEventListener('scroll', handleScroll);
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [location.pathname]);
+
+    // Update active section based on path if not on home
+    useEffect(() => {
+        if (location.pathname !== '/') {
+            setActiveSection('');
+        } else {
+            // Re-check scroll position on home mount
+            const handleScroll = () => {
+                // duplicate simple check logic or just let the scroll listener handle it
+            };
+            handleScroll();
+        }
+    }, [location.pathname]);
+
+
+    const navItems = [
+        { id: 'home', label: 'Home', action: (e) => handleNavClick(e, 'home'), link: '/' },
+        { id: 'roadmaps', label: 'Roadmaps', action: (e) => handleNavClick(e, 'roadmaps'), link: '/#roadmaps' },
+        { id: 'features', label: 'Features', action: (e) => handleNavClick(e, 'features'), link: '/#features' },
+    ];
 
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-black/20 backdrop-blur-xl border-b border-white/10' : 'bg-transparent border-b border-transparent'
             }`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-20 items-center">
-                    <div className="flex items-center">
-                        <Link to="/" className="flex-shrink-0 flex items-center gap-2 group">
+                <div className="flex justify-between h-20 items-center relative">
+                    {/* Logo Section */}
+                    <div className="flex items-center shrink-0">
+                        <Link to="/" className="flex items-center gap-2 group" onClick={() => setActiveSection('home')}>
                             <div className="p-2 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-all duration-300">
                                 <Flower className="h-6 w-6 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
                             </div>
-                            <span className="font-cinzel font-bold text-2xl text-white tracking-wide text-glow hidden sm:block">
+                            <span className="font-cinzel font-bold text-xl md:text-2xl text-white tracking-wide text-glow hidden sm:block">
                                 Puja Parikrama
                             </span>
                         </Link>
                     </div>
 
-                    <div className="hidden md:flex items-center space-x-6">
-                        <Link to="/" className="text-white/80 hover:text-white font-medium transition-colors relative group text-sm">
-                            Home
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full shadow-[0_0_8px_rgba(250,204,21,0.8)]"></span>
-                        </Link>
+                    {/* Center Pill Navigation (Desktop) */}
+                    <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2">
+                        <div className="flex items-center p-1.5 bg-white/5 backdrop-blur-2xl border border-white/10 rounded-full shadow-lg">
+                            {navItems.map((item) => (
+                                <a
+                                    key={item.id}
+                                    href={item.link}
+                                    onClick={item.action}
+                                    className={`px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ${activeSection === item.id
+                                        ? 'bg-white/10 text-yellow-400 shadow-[0_0_10px_rgba(255,255,255,0.05)]'
+                                        : 'text-white/70 hover:text-white hover:bg-white/5'
+                                        }`}
+                                >
+                                    {item.label}
+                                </a>
+                            ))}
+                        </div>
+                    </div>
 
-                        <a href="#roadmaps" onClick={scrollToRoadmaps} className="text-white/80 hover:text-white font-medium transition-colors relative group text-sm">
-                            Roadmaps
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full shadow-[0_0_8px_rgba(250,204,21,0.8)]"></span>
-                        </a>
-
-                        {selectedPuja && (
-                            <Link to="/temples" className="text-white/80 hover:text-white font-medium transition-colors relative group text-sm">
-                                Temples
-                                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 transition-all duration-300 group-hover:w-full shadow-[0_0_8px_rgba(250,204,21,0.8)]"></span>
-                            </Link>
-                        )}
-
-                        {/* Puja Selection / Change Button */}
+                    {/* Right Buttons Section (Desktop) */}
+                    <div className="hidden md:flex items-center gap-4">
+                        {/* Select Puja (Outlined) */}
                         <Link
                             to={getSelectorLink()}
-                            className="bg-white/5 border border-white/10 hover:border-yellow-400/50 hover:bg-white/10 text-white/80 hover:text-yellow-400 px-4 py-2 rounded-full flex items-center gap-2 text-sm font-medium transition-all duration-300 backdrop-blur-md group"
+                            className="px-5 py-2.5 rounded-full border border-white/20 text-sm font-medium text-white hover:bg-white/10 hover:border-white/40 transition-all duration-300 flex items-center gap-2 group"
                         >
                             {!selectedPuja ? (
-                                <><span>Select Puja</span> <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" /></>
+                                <>Select Puja</>
                             ) : (
-                                <><ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" /> <span>Change Puja</span></>
+                                <>Change Puja</>
                             )}
                         </Link>
 
-                        <Link to="/planner" className="btn-liquid text-sm px-6 py-2">
+                        {/* Start Planning (Filled) */}
+                        <Link
+                            to="/planner"
+                            className="px-6 py-2.5 rounded-full bg-gradient-to-r from-orange-500 to-red-600 text-sm font-bold text-white shadow-lg hover:shadow-orange-500/30 hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-2"
+                        >
                             Start Planning
+                            <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
 
+                    {/* Mobile Menu Button */}
                     <div className="md:hidden flex items-center">
                         <button
                             onClick={() => setIsOpen(!isOpen)}
-                            className="text-white hover:text-yellow-400 transition-colors focus:outline-none"
+                            className="p-2 text-white hover:text-yellow-400 transition-colors focus:outline-none"
                         >
-                            {isOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
+                            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
                         </button>
                     </div>
                 </div>
             </div>
 
-            {/* Glass Mobile menu */}
+            {/* Mobile Menu Dropdown */}
             {isOpen && (
-                <div className="md:hidden glass-panel mx-4 mt-2 rounded-xl overflow-hidden animate-fade-in-down">
-                    <div className="px-4 pt-4 pb-6 space-y-4">
+                <div className="md:hidden glass-panel mx-4 mt-2 rounded-2xl overflow-hidden animate-fade-in-down border border-white/10 bg-[#2e0202]/90 backdrop-blur-xl">
+                    <div className="p-4 space-y-3">
+                        {navItems.map((item) => (
+                            <a
+                                key={item.id}
+                                href={item.link}
+                                onClick={(e) => {
+                                    item.action(e);
+                                    setIsOpen(false);
+                                }}
+                                className={`block px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${activeSection === item.id
+                                    ? 'bg-white/10 text-yellow-400'
+                                    : 'text-white/70 hover:bg-white/5 hover:text-white'
+                                    }`}
+                            >
+                                {item.label}
+                            </a>
+                        ))}
+
+                        <div className="h-px bg-white/10 my-4" />
+
                         <Link
                             to={getSelectorLink()}
                             onClick={() => setIsOpen(false)}
-                            className="flex items-center gap-2 w-full px-3 py-2 rounded-lg text-base font-medium text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+                            className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all"
                         >
-                            {!selectedPuja ? (
-                                <><span>Select Puja</span> <ArrowRight className="w-4 h-4" /></>
-                            ) : (
-                                <><ArrowLeft className="w-4 h-4" /> <span>Change Puja</span></>
-                            )}
+                            {!selectedPuja ? 'Select Puja' : 'Change Puja'}
                         </Link>
-
-                        <Link
-                            to="/"
-                            className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400 transition-colors"
-                            onClick={() => setIsOpen(false)}
-                        >
-                            Home
-                        </Link>
-
-                        <a
-                            href="#roadmaps"
-                            className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400 transition-colors"
-                            onClick={(e) => {
-                                setIsOpen(false);
-                                scrollToRoadmaps(e);
-                            }}
-                        >
-                            Roadmaps
-                        </a>
-
-                        {selectedPuja && (
-                            <Link
-                                to="/temples"
-                                className="block px-3 py-2 rounded-lg text-base font-medium text-white hover:bg-white/10 hover:text-yellow-400 transition-colors"
-                                onClick={() => setIsOpen(false)}
-                            >
-                                Temples
-                            </Link>
-                        )}
 
                         <Link
                             to="/planner"
-                            className="block w-full text-center bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold py-3 rounded-lg shadow-lg"
                             onClick={() => setIsOpen(false)}
+                            className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-gradient-to-r from-orange-500 to-red-600 text-white font-bold shadow-lg mt-2"
                         >
-                            Start Planning
+                            Start Planning <ArrowRight className="w-4 h-4" />
                         </Link>
                     </div>
                 </div>
