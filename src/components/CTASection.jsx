@@ -1,12 +1,21 @@
 import { Link } from 'react-router-dom';
+import { usePuja } from '../context/PujaContext';
 
 const CTASection = () => {
+    const { currentTheme } = usePuja();
+    const primaryColor = currentTheme.colors.primary;
+    const secondaryColor = currentTheme.colors.secondary;
+    const gradientStyle = { backgroundImage: `linear-gradient(to right, ${secondaryColor}, ${primaryColor})` };
+
     return (
         <section className="py-24 relative z-10 overflow-hidden">
             <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
                 <div className="glass-panel p-12 rounded-3xl border border-white/20 relative overflow-hidden">
                     {/* Glow behind */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-orange-500/20 blur-3xl rounded-full -z-10"></div>
+                    <div
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full blur-3xl rounded-full -z-10 transition-colors duration-700"
+                        style={{ backgroundColor: `${primaryColor}33` }}
+                    ></div>
 
                     <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 font-cinzel text-glow">
                         Your Divine Journey Awaits
@@ -18,7 +27,11 @@ const CTASection = () => {
                     <div className="flex flex-col sm:flex-row justify-center gap-6">
                         <Link
                             to="/select-puja?mode=plan"
-                            className="btn-liquid inline-flex items-center justify-center gap-2 text-lg"
+                            className="btn-liquid inline-flex items-center justify-center gap-2 text-lg transition-all duration-500"
+                            style={{
+                                ...gradientStyle,
+                                boxShadow: `0 10px 25px -5px ${primaryColor}66`
+                            }}
                         >
                             Start Planning
                         </Link>

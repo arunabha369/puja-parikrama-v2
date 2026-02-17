@@ -12,6 +12,10 @@
 }
 
 @layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
     body {
         @apply bg-deep-maroon text-white font-inter overflow-x-hidden;
         background-color: #2e0202;

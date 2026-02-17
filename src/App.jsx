@@ -14,8 +14,8 @@ const AppContent = () => {
   return (
     <Router>
       <LiquidBackground>
+        <Navbar />
         <div className="flex flex-col min-h-screen animate-fade-in-up">
-          <Navbar />
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
