@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { STARTING_POINTS } from '../utils/plannerLogic';
-import { MapPin, Clock } from 'lucide-react';
+import { MapPin } from 'lucide-react';
 
 const PlannerForm = ({ onGenerate }) => {
     const [area, setArea] = useState('North');
@@ -85,9 +85,8 @@ const PlannerForm = ({ onGenerate }) => {
                                 type="time"
                                 value={startTime}
                                 onChange={(e) => setStartTime(e.target.value)}
-                                className="w-full bg-white/10 border border-white/10 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-2.5 pl-10 [color-scheme:dark]"
+                                className="w-full bg-white/10 border border-white/10 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-2.5 [color-scheme:dark]"
                             />
-                            <Clock className="absolute left-3 top-3 h-4 w-4 text-white/50 pointer-events-none" />
                         </div>
                     </div>
                     <div>
@@ -97,9 +96,8 @@ const PlannerForm = ({ onGenerate }) => {
                                 type="time"
                                 value={endTime}
                                 onChange={(e) => setEndTime(e.target.value)}
-                                className="w-full bg-white/10 border border-white/10 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-2.5 pl-10 [color-scheme:dark]"
+                                className="w-full bg-white/10 border border-white/10 text-white text-sm rounded-lg focus:ring-yellow-500 focus:border-yellow-500 block p-2.5 [color-scheme:dark]"
                             />
-                            <Clock className="absolute left-3 top-3 h-4 w-4 text-white/50 pointer-events-none" />
                         </div>
                     </div>
                 </div>
