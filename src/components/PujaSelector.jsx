@@ -38,7 +38,7 @@ const PujaSelector = () => {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 relative z-10">
+        <div className="min-h-screen flex flex-col items-center justify-center p-4 md:p-8 pt-28 md:pt-36 relative z-10">
             {/* Header */}
             <div className="text-center mb-12 animate-fade-in-down">
                 <span className="inline-block py-1 px-3 rounded-full bg-white/10 border border-white/20 text-yellow-300 text-xs font-bold tracking-widest uppercase mb-4 backdrop-blur-md">
