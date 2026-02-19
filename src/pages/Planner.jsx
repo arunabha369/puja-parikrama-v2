@@ -11,7 +11,9 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const Planner = () => {
-    const { selectedPuja } = usePuja();
+    const { selectedPuja, currentTheme } = usePuja();
+    const primaryColor = currentTheme?.colors?.primary || '#EAB308';
+    const secondaryColor = currentTheme?.colors?.secondary || '#F97316';
     const [itinerary, setItinerary] = useState([]);
     const [generated, setGenerated] = useState(false);
     const [startCoords, setStartCoords] = useState(null);
@@ -220,9 +222,12 @@ const Planner = () => {
                                 <div className="mt-6 text-center">
                                     <button
                                         onClick={handleReset}
-                                        className="text-white hover:text-yellow-400 font-medium flex items-center justify-center gap-2 mx-auto transition-colors"
+                                        className="w-full btn-liquid relative overflow-hidden group py-3 px-6 rounded-xl font-bold text-white transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg flex items-center justify-center gap-2"
+                                        style={{ background: `linear-gradient(45deg, ${primaryColor} 0%, ${secondaryColor} 100%)` }}
                                     >
-                                        <RotateCcw className="w-4 h-4" /> Start Over
+                                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                                        <RotateCcw className="w-5 h-5 relative z-10" />
+                                        <span className="relative z-10">Start Over</span>
                                     </button>
                                 </div>
                             )}

@@ -9,27 +9,16 @@ const ResultCard = ({ pandal, index, isFirst }) => {
     return (
         <div className="flex relative group">
             {/* Timeline Column */}
-            <div className="w-24 flex-shrink-0 flex flex-col items-end pr-6 pt-1 text-right relative">
+            <div className="w-12 flex-shrink-0 flex flex-col items-center relative mr-3">
                 {/* Vertical Line */}
-                <div className={`absolute right-[23px] w-0.5 bg-white/20 ${lineClass} group-last:h-8`}></div>
+                <div className={`absolute left-1/2 -translate-x-1/2 w-0.5 bg-white/20 ${lineClass} group-last:h-8`}></div>
 
-                {/* Arrival Time */}
-                <div className="font-bold text-white text-lg leading-none font-outfit">
-                    {pandal.arrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-                </div>
-                {/* Departure Time (faint) */}
-                <div className="text-xs text-white/50 mt-1 font-outfit">
-                    {pandal.departureTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })}
-                </div>
-            </div>
-
-            {/* Icon Column */}
-            <div className="relative flex flex-col items-center mr-6">
-                <div className="w-4 h-4 rounded-full bg-yellow-400 border-4 border-black/50 shadow-[0_0_10px_rgba(250,204,21,0.5)] z-10 mt-2"></div>
+                {/* The Dot */}
+                <div className="w-4 h-4 rounded-full bg-yellow-400 border-4 border-black/50 shadow-[0_0_10px_rgba(250,204,21,0.5)] z-10 mt-1.5 relative"></div>
             </div>
 
             {/* Content Card */}
-            <div className="flex-grow pb-10">
+            <div className="flex-grow pb-10 min-w-0">
                 <div className="glass-card hover:bg-white/10 transition-colors duration-300 border border-white/10 group-hover:border-yellow-400/50">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
                         <div>
@@ -53,6 +42,13 @@ const ResultCard = ({ pandal, index, isFirst }) => {
                         <div className="flex items-center gap-1.5">
                             <Clock className="w-4 h-4 text-yellow-400" />
                             <span>{pandal.travelMinutes} min walk</span>
+                        </div>
+                        <div className="w-full basis-full h-0"></div> {/* Line break */}
+                        <div className="flex items-center gap-1.5 text-yellow-400 font-medium">
+                            <Clock className="w-4 h-4 text-yellow-400" />
+                            <span>
+                                {pandal.arrivalTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })} - {pandal.departureTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true })}
+                            </span>
                         </div>
                     </div>
 
