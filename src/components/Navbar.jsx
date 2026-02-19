@@ -132,7 +132,7 @@ const Navbar = () => {
 
                 {/* Logo Section */}
                 <div className="flex items-center shrink-0">
-                    <Link to="/" className="flex items-center gap-2 group" onClick={() => setActiveSection('home')}>
+                    <Link to="/" className="flex items-center gap-2 group" onClick={(e) => handleNavClick(e, 'home')}>
                         <div className="p-1.5 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-all duration-300">
                             <Flower className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
                         </div>
