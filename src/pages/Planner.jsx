@@ -196,7 +196,7 @@ const Planner = () => {
     const gmapsUrl = generateGoogleMapsUrl(itinerary, startPointKey);
 
     return (
-        <div className="relative z-10 flex flex-col font-sans">
+        <div className="relative z-10 flex flex-col font-sans pt-24 pb-12">
             <Helmet>
                 <title>Planner | Puja Parikrama</title>
                 <meta name="description" content="Generate your custom Durga Puja hopping itinerary with travel times and distances." />

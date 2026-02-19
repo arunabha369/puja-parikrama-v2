@@ -1,4 +1,4 @@
-import { Flower } from 'lucide-react';
+import Logo from './Logo';
 
 const Footer = () => {
     return (
@@ -6,9 +6,8 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid md:grid-cols-3 gap-12">
                     <div>
-                        <div className="flex items-center gap-3 mb-6">
-                            <Flower className="h-6 w-6 text-yellow-400" />
-                            <span className="font-cinzel font-bold text-xl text-white">Puja Parikrama</span>
+                        <div className="mb-6">
+                            <Logo className="w-8 h-8" classNameText="text-2xl" />
                         </div>
                         <p className="text-white/60 text-sm leading-relaxed">
                             Your spiritual companion for a seamless and divine Durga Puja experience. Plan your parikrama with precision and devotion.

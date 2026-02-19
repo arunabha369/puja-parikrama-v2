@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Flower, ArrowRight, ArrowLeft, User } from 'lucide-react';
+import { Menu, X, ArrowRight, ArrowLeft, User } from 'lucide-react';
 import { usePuja } from '../context/PujaContext';
+import Logo from './Logo';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -133,12 +134,7 @@ const Navbar = () => {
                 {/* Logo Section */}
                 <div className="flex items-center shrink-0">
                     <Link to="/" className="flex items-center gap-2 group" onClick={(e) => handleNavClick(e, 'home')}>
-                        <div className="p-1.5 rounded-full bg-white/5 border border-white/10 group-hover:bg-white/10 transition-all duration-300">
-                            <Flower className="h-5 w-5 text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.5)]" />
-                        </div>
-                        <span className="font-cinzel font-bold text-lg md:text-xl text-white tracking-wide text-glow block">
-                            Puja Parikrama
-                        </span>
+                        <Logo className="w-8 h-8" classNameText="text-lg md:text-xl" />
                     </Link>
                 </div>
 
@@ -177,12 +173,7 @@ const Navbar = () => {
 
                 {/* Right Buttons Section (Desktop) */}
                 <div className="hidden md:flex items-center gap-3">
-                    <Link
-                        to={getSelectorLink()}
-                        className="px-4 py-2 rounded-full text-xs font-medium text-white/80 hover:text-white hover:bg-white/5 transition-all duration-300 group ring-1 ring-white/10 hover:ring-white/30"
-                    >
-                        {!selectedPuja ? 'Select Puja' : 'Change Puja'}
-                    </Link>
+                    {/* Select Puja Button Removed */}
 
                     <Link
                         to="/planner"
@@ -243,13 +234,7 @@ const Navbar = () => {
                         <div className="h-px bg-white/10 my-3" />
 
                         <div className="grid grid-cols-2 gap-3">
-                            <Link
-                                to={getSelectorLink()}
-                                onClick={() => setIsOpen(false)}
-                                className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm"
-                            >
-                                {!selectedPuja ? 'Select' : 'Change'}
-                            </Link>
+                            {/* Select Puja Mobile Link Removed */}
 
                             <Link
                                 to="/planner"
