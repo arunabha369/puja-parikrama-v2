@@ -262,6 +262,22 @@ const Planner = () => {
                                             <div className="text-sm text-yellow-100 opacity-90">Walking Distance</div>
                                             <div className="text-3xl font-bold text-white">{itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1)} <span className="text-base font-normal">km</span></div>
                                         </div>
+                                        <div className="h-8 w-px bg-white/20 hidden md:block"></div>
+                                        <div className="text-center md:text-left">
+                                            <div className="text-sm text-yellow-100 opacity-90">Walking Time</div>
+                                            {(() => {
+                                                const totalMinutes = Math.round(itinerary.reduce((acc, curr) => acc + curr.travelMinutes, 0));
+                                                return totalMinutes > 60 ? (
+                                                    <div className="text-3xl font-bold text-white">
+                                                        {Math.floor(totalMinutes / 60)} <span className="text-base font-normal">hr</span> {totalMinutes % 60} <span className="text-base font-normal">min</span>
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-3xl font-bold text-white">
+                                                        {totalMinutes} <span className="text-base font-normal">min</span>
+                                                    </div>
+                                                );
+                                            })()}
+                                        </div>
 
                                         <div className="flex gap-3">
                                             <a
