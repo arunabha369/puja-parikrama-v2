@@ -13,9 +13,12 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 
+import ScrollToTop from './components/ScrollToTop';
+
 const AppContent = () => {
   return (
     <Router>
+      <ScrollToTop />
       <LiquidBackground>
         <Navbar />
         <div className="flex flex-col min-h-screen animate-fade-in-up">
