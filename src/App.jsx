@@ -10,6 +10,7 @@ import { PujaProvider } from './context/PujaContext';
 
 import Temples from './pages/Temples';
 import Login from './pages/Login';
+import Profile from './pages/Profile';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const AppContent = () => {
@@ -34,6 +35,11 @@ const AppContent = () => {
               <Route path="/planner" element={
                 <ProtectedRoute>
                   <Planner />
+                </ProtectedRoute>
+              } />
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
                 </ProtectedRoute>
               } />
               <Route path="/login" element={<Login />} />

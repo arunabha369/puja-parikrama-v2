@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Flower, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Menu, X, Flower, ArrowRight, ArrowLeft, User } from 'lucide-react';
 import { usePuja } from '../context/PujaContext';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState('home');
-    const { selectedPuja, currentTheme } = usePuja();
+    const { selectedPuja, currentTheme, user } = usePuja();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -192,6 +192,16 @@ const Navbar = () => {
                         Start Planning
                         <ArrowRight className="w-3 h-3" />
                     </Link>
+
+                    {user && (
+                        <Link
+                            to="/profile"
+                            className="p-2 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-white transition-all duration-300"
+                            title="My Profile"
+                        >
+                            <User className="w-5 h-5" />
+                        </Link>
+                    )}
                 </div>
 
                 {/* Mobile Menu Button - Optimized Position */}
@@ -244,11 +254,21 @@ const Navbar = () => {
                             <Link
                                 to="/planner"
                                 onClick={() => setIsOpen(false)}
-                                className="flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-white font-bold shadow-lg text-sm"
+                                className="col-span-2 flex items-center justify-center gap-2 px-3 py-3 rounded-xl text-white font-bold shadow-lg text-sm"
                                 style={{ ...gradientStyle, boxShadow: `0 4px 15px -3px ${primaryColor}66` }}
                             >
                                 Plan <ArrowRight className="w-4 h-4" />
                             </Link>
+
+                            {user && (
+                                <Link
+                                    to="/profile"
+                                    onClick={() => setIsOpen(false)}
+                                    className="col-span-2 flex items-center justify-center gap-2 px-3 py-3 rounded-xl border border-white/10 text-white font-medium hover:bg-white/5 transition-all text-sm mt-1"
+                                >
+                                    <User className="w-4 h-4" /> My Profile
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>
