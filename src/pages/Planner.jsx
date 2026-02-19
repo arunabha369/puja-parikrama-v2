@@ -252,48 +252,65 @@ const Planner = () => {
                                     </div>
 
                                     {/* Stats & Actions */}
-                                    <div className="glass-panel p-6 rounded-2xl flex flex-col md:flex-row justify-between items-center gap-4 bg-gradient-to-r from-orange-600/80 to-red-600/80 border-none">
-                                        <div className="text-center md:text-left">
-                                            <div className="text-sm text-yellow-100 opacity-90">Total Pandals</div>
-                                            <div className="text-3xl font-bold text-white">{itinerary.length}</div>
-                                        </div>
-                                        <div className="h-8 w-px bg-white/20 hidden md:block"></div>
-                                        <div className="text-center md:text-left">
-                                            <div className="text-sm text-yellow-100 opacity-90">Walking Distance</div>
-                                            <div className="text-3xl font-bold text-white">{itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1)} <span className="text-base font-normal">km</span></div>
-                                        </div>
-                                        <div className="h-8 w-px bg-white/20 hidden md:block"></div>
-                                        <div className="text-center md:text-left">
-                                            <div className="text-sm text-yellow-100 opacity-90">Walking Time</div>
-                                            {(() => {
-                                                const totalMinutes = Math.round(itinerary.reduce((acc, curr) => acc + curr.travelMinutes, 0));
-                                                return totalMinutes > 60 ? (
-                                                    <div className="text-3xl font-bold text-white">
-                                                        {Math.floor(totalMinutes / 60)} <span className="text-base font-normal">hr</span> {totalMinutes % 60} <span className="text-base font-normal">min</span>
-                                                    </div>
-                                                ) : (
-                                                    <div className="text-3xl font-bold text-white">
-                                                        {totalMinutes} <span className="text-base font-normal">min</span>
-                                                    </div>
-                                                );
-                                            })()}
-                                        </div>
+                                    <div className="glass-panel p-6 rounded-2xl bg-gradient-to-r from-orange-600/80 to-red-600/80 border-none">
+                                        <h3 className="text-xl font-bold text-white mb-6 font-cinzel border-b border-white/20 pb-2">Route Summary</h3>
 
-                                        <div className="flex gap-3">
-                                            <a
-                                                href={gmapsUrl}
-                                                target="_blank"
-                                                rel="noreferrer"
-                                                className="bg-white text-orange-600 hover:bg-orange-50 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
-                                            >
-                                                <MapIcon className="w-4 h-4" /> Route
-                                            </a>
-                                            <button
-                                                onClick={handleDownloadPDF}
-                                                className="bg-black/20 hover:bg-black/30 text-white border border-white/20 px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
-                                            >
-                                                <Download className="w-4 h-4" /> PDF
-                                            </button>
+                                        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+
+                                            {/* Stats Group - Horizontal on all screens */}
+                                            <div className="flex flex-row justify-between w-full md:w-auto gap-4 md:gap-8 text-center md:text-left">
+                                                <div>
+                                                    <div className="text-xs md:text-sm text-yellow-100 opacity-90 mb-1">Total</div>
+                                                    <div className="text-2xl md:text-3xl font-bold text-white leading-none">{itinerary.length}</div>
+                                                    <div className="text-[10px] md:hidden text-white/60">Pandals</div>
+                                                </div>
+
+                                                <div className="w-px bg-white/20"></div>
+
+                                                <div>
+                                                    <div className="text-xs md:text-sm text-yellow-100 opacity-90 mb-1">Distance</div>
+                                                    <div className="text-2xl md:text-3xl font-bold text-white leading-none">
+                                                        {itinerary.reduce((acc, curr) => acc + curr.distance, 0).toFixed(1)}
+                                                        <span className="text-sm md:text-base font-normal ml-1">km</span>
+                                                    </div>
+                                                </div>
+
+                                                <div className="w-px bg-white/20"></div>
+
+                                                <div>
+                                                    <div className="text-xs md:text-sm text-yellow-100 opacity-90 mb-1">Time</div>
+                                                    {(() => {
+                                                        const totalMinutes = Math.round(itinerary.reduce((acc, curr) => acc + curr.travelMinutes, 0));
+                                                        return totalMinutes > 60 ? (
+                                                            <div className="text-2xl md:text-3xl font-bold text-white leading-none">
+                                                                {Math.floor(totalMinutes / 60)}<span className="text-sm md:text-base font-normal">h</span> {totalMinutes % 60}<span className="text-sm md:text-base font-normal">m</span>
+                                                            </div>
+                                                        ) : (
+                                                            <div className="text-2xl md:text-3xl font-bold text-white leading-none">
+                                                                {totalMinutes} <span className="text-sm md:text-base font-normal">min</span>
+                                                            </div>
+                                                        );
+                                                    })()}
+                                                </div>
+                                            </div>
+
+                                            {/* Buttons - Below on mobile, inline on desktop */}
+                                            <div className="flex gap-3 w-full md:w-auto justify-center">
+                                                <a
+                                                    href={gmapsUrl}
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                    className="flex-1 md:flex-none justify-center bg-white text-orange-600 hover:bg-orange-50 px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-transform active:scale-95 shadow-lg"
+                                                >
+                                                    <MapIcon className="w-4 h-4" /> Route
+                                                </a>
+                                                <button
+                                                    onClick={handleDownloadPDF}
+                                                    className="flex-1 md:flex-none justify-center bg-black/20 hover:bg-black/30 text-white border border-white/20 px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-transform active:scale-95"
+                                                >
+                                                    <Download className="w-4 h-4" /> PDF
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
 

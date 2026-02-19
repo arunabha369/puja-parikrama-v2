@@ -29,8 +29,8 @@ const PlannerForm = ({ onGenerate }) => {
 
     return (
         <div className="glass-panel p-6 md:p-8 rounded-2xl relative overflow-hidden">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2 font-cinzel">
-                <MapPin className="h-6 w-6 text-yellow-400" />
+            <h2 className="text-xl md:text-2xl font-bold text-white mb-6 flex items-center gap-2 font-cinzel whitespace-nowrap">
+                <MapPin className="h-5 w-5 md:h-6 md:w-6 text-yellow-400 flex-shrink-0" />
                 Customize Parikrama
             </h2>
 
@@ -110,7 +110,7 @@ const PlannerForm = ({ onGenerate }) => {
                     Check My Plan
                 </button>
             </form>
-        </div>
+        </div >
     );
 };
 
