@@ -10,6 +10,7 @@ const AVG_WALKING_SPEED_KMPH = 4.5;
 export const PANDAL_DATA = pandalDataRaw.corePandals.map(p => ({
     ...p,
     id: `${p.lat}-${p.lon}`,
+    slug: p.name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
     area: p.lat < KOLKATA_DIVIDING_LATITUDE ? 'South' : 'North',
     description: p.description.replace('{year}', new Date().getFullYear())
 }));

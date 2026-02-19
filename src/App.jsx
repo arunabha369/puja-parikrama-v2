@@ -11,6 +11,7 @@ import { PujaProvider } from './context/PujaContext';
 import Temples from './pages/Temples';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import PandalDetails from './pages/PandalDetails';
 import ProtectedRoute from './components/ProtectedRoute';
 
 import ScrollToTop from './components/ScrollToTop';
@@ -43,6 +44,11 @@ const AppContent = () => {
               <Route path="/profile" element={
                 <ProtectedRoute>
                   <Profile />
+                </ProtectedRoute>
+              } />
+              <Route path="/pandal/:slug" element={
+                <ProtectedRoute>
+                  <PandalDetails />
                 </ProtectedRoute>
               } />
               <Route path="/login" element={<Login />} />
