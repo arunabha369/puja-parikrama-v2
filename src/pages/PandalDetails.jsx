@@ -75,7 +75,7 @@ const PandalDetails = () => {
                 </div>
 
                 {/* Content Grid */}
-                <div className="grid md:grid-cols-3 gap-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                <div className="flex flex-col-reverse md:grid md:grid-cols-3 gap-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
                     {/* Maintainer/Details Column */}
                     <div className="md:col-span-2 space-y-6">
                         <div className="glass-panel p-8 rounded-2xl">
