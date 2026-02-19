@@ -83,9 +83,11 @@ const Navbar = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [location.pathname]);
 
-    // Update active section based on path if not on home
+    // Update active section based on path
     useEffect(() => {
-        if (location.pathname !== '/') {
+        if (location.pathname === '/temples') {
+            setActiveSection('temples');
+        } else if (location.pathname !== '/') {
             setActiveSection('');
         }
     }, [location.pathname]);
@@ -101,7 +103,7 @@ const Navbar = () => {
         } else {
             setPillStyle({ left: 0, width: 0, opacity: 0 }); // Hide if no active section
         }
-    }, [activeSection]);
+    }, [activeSection, user]); // Added user dependency to re-calc when nav items change
 
 
     const navItems = [
@@ -109,6 +111,18 @@ const Navbar = () => {
         { id: 'roadmaps', label: 'Roadmaps', action: (e) => handleNavClick(e, 'roadmaps'), link: '/#roadmaps' },
         { id: 'features', label: 'Features', action: (e) => handleNavClick(e, 'features'), link: '/#features' },
     ];
+
+    if (user) {
+        navItems.push({
+            id: 'temples',
+            label: 'View Pandals',
+            action: (e) => {
+                e.preventDefault();
+                navigate('/temples');
+            },
+            link: '/temples'
+        });
+    }
 
     // Dynamic Colors based on Theme
     const bgColor = currentTheme.colors.background + (scrolled ? 'CC' : '99'); // Hex + Alpha (80% / 60%)
