@@ -9,6 +9,8 @@ import PujaSelector from './components/PujaSelector';
 import { PujaProvider } from './context/PujaContext';
 
 import Temples from './pages/Temples';
+import Login from './pages/Login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const AppContent = () => {
   return (
@@ -19,9 +21,22 @@ const AppContent = () => {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/select-puja" element={<PujaSelector />} />
-              <Route path="/temples" element={<Temples />} />
-              <Route path="/planner" element={<Planner />} />
+              <Route path="/select-puja" element={
+                <ProtectedRoute>
+                  <PujaSelector />
+                </ProtectedRoute>
+              } />
+              <Route path="/temples" element={
+                <ProtectedRoute>
+                  <Temples />
+                </ProtectedRoute>
+              } />
+              <Route path="/planner" element={
+                <ProtectedRoute>
+                  <Planner />
+                </ProtectedRoute>
+              } />
+              <Route path="/login" element={<Login />} />
             </Routes>
           </main>
           <Footer />

@@ -91,12 +91,25 @@ export const PujaProvider = ({ children }) => {
         return THEMES[selectedPuja] || THEMES.durga; // Fallback to Durga if somehow undefined, but Selector handles null
     }, [selectedPuja, previewTheme]);
 
+    const [user, setUser] = useState(null);
+
+    const login = (userData) => {
+        setUser(userData);
+    };
+
+    const logout = () => {
+        setUser(null);
+    };
+
     const value = {
         selectedPuja,
         setSelectedPuja,
         setPreviewTheme, // Export setter
         currentTheme,
-        themes: THEMES
+        themes: THEMES,
+        user,
+        login,
+        logout
     };
 
     return (
