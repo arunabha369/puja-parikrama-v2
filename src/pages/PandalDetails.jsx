@@ -31,7 +31,7 @@ const PandalDetails = () => {
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white/80 hover:bg-white/10 hover:text-yellow-400 hover:border-yellow-500/30 transition-all duration-300 mb-8 group backdrop-blur-sm"
                 >
                     <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-                    <span className="font-cinzel text-sm tracking-wide">Back to Temples</span>
+                    <span className="font-cinzel text-sm tracking-wide">Back to View Pandals</span>
                 </Link>
 
                 {/* Hero Image */}

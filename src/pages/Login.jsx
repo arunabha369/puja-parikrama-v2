@@ -28,7 +28,7 @@ const Login = () => {
     }, [user, navigate, location]);
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-4 relative z-20">
+        <div className="min-h-screen flex items-center justify-center px-4 pt-32 pb-4 relative z-20">
             {/* Back Button Removed as per request */}
 
             <div className="glass-panel w-full max-w-md p-8 rounded-2xl relative overflow-hidden animate-fade-in-up">
