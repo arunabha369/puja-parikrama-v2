@@ -24,7 +24,7 @@ const HeroSection = () => {
                             style={{ backgroundColor: primaryColor }}
                         ></span>
                     </span>
-                    <span className="tracking-wide uppercase text-xs font-bold text-yellow-100">Plan your 2025 Parikrama Now</span>
+                    <span className="tracking-wide uppercase text-xs font-bold text-yellow-100">Plan your {new Date().getFullYear()} Parikrama Now</span>
                 </div>
 
                 {/* Main Heading */}
