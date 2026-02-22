@@ -8,20 +8,21 @@ const Logo = ({ className = "w-8 h-8", classNameText = "text-xl" }) => {
                 <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                 <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full relative z-10 drop-shadow-[0_0_8px_rgba(234,179,8,0.5)]">
-                    {/* Lotus Base */}
-                    <path d="M20 80 C 20 80, 40 95, 50 85 C 60 95, 80 80, 80 80" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-red-500" />
-                    <path d="M25 78 C 25 78, 35 60, 50 65 C 65 60, 75 78, 75 78" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-orange-400" />
-                    <path d="M50 65 V 85" stroke="currentColor" strokeWidth="3" strokeLinecap="round" className="text-orange-400" />
+                    {/* Swastik Path */}
+                    <path
+                        d="M 50 50 V 15 H 85 M 50 50 H 85 V 85 M 50 50 V 85 H 15 M 50 50 H 15 V 15"
+                        stroke="currentColor"
+                        strokeWidth="8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="text-red-600"
+                    />
 
-                    {/* Trishul (Trident) */}
-                    <path d="M50 85 V 15" stroke="currentColor" strokeWidth="5" strokeLinecap="round" className="text-yellow-400" />
-                    {/* Left Prong */}
-                    <path d="M50 55 C 20 55, 20 25, 20 25" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-yellow-400" />
-                    {/* Right Prong */}
-                    <path d="M50 55 C 80 55, 80 25, 80 25" stroke="currentColor" strokeWidth="4" strokeLinecap="round" className="text-yellow-400" />
-
-                    {/* Bindu/Dot */}
-                    <circle cx="50" cy="72" r="3" fill="currentColor" className="text-red-600" />
+                    {/* 4 dots of swastik */}
+                    <circle cx="33" cy="33" r="4.5" fill="currentColor" className="text-yellow-400" />
+                    <circle cx="67" cy="33" r="4.5" fill="currentColor" className="text-yellow-400" />
+                    <circle cx="33" cy="67" r="4.5" fill="currentColor" className="text-yellow-400" />
+                    <circle cx="67" cy="67" r="4.5" fill="currentColor" className="text-yellow-400" />
                 </svg>
             </div>
 
