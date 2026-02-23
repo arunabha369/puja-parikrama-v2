@@ -6,12 +6,9 @@ const LiquidBackground = ({ children }) => {
     const { currentTheme, selectedPuja, previewTheme, themes } = usePuja();
 
     // Determine which colors to use:
-    // 1. If a puja is selected, use its theme.
-    // 2. If a preview is active (hover), use that theme.
-    // 3. Otherwise, use the default landing page theme (Durga).
-    const colors = (selectedPuja || previewTheme)
-        ? currentTheme.colors
-        : themes.durga.colors;
+    // PujaContext's `currentTheme` already handles falling back to previewTheme
+    // or selectedPuja or the default 'durga'.
+    const colors = currentTheme.colors;
 
     return (
         <div
