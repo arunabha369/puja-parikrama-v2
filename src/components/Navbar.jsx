@@ -87,10 +87,16 @@ const Navbar = () => {
     useEffect(() => {
         if (location.pathname === '/temples') {
             setActiveSection('temples');
-        } else if (location.pathname !== '/') {
+        } else if (location.pathname === '/') {
+            // ensure home is active when routing back to the main landing page
+            // except if there is a location.state.scrollTo happening immediately
+            if (!location.state?.scrollTo && window.scrollY < 20) {
+                setActiveSection('home');
+            }
+        } else {
             setActiveSection('');
         }
-    }, [location.pathname]);
+    }, [location.pathname, location.state]);
 
     useEffect(() => {
         const activeElement = navRefs.current[activeSection];
@@ -147,7 +153,17 @@ const Navbar = () => {
 
                 {/* Logo Section */}
                 <div className="flex items-center shrink-0">
-                    <Link to="/" className="flex items-center gap-2 group" onClick={(e) => handleNavClick(e, 'home')}>
+                    <Link
+                        to="/"
+                        className="flex items-center gap-2 group"
+                        onClick={(e) => {
+                            if (location.pathname === '/') {
+                                handleNavClick(e, 'home');
+                            } else {
+                                setActiveSection('home');
+                            }
+                        }}
+                    >
                         <Logo className="w-8 h-8" classNameText="text-lg md:text-xl" />
                     </Link>
                 </div>
