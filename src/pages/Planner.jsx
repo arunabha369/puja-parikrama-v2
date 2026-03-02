@@ -7,8 +7,8 @@ import ResultCard from '../components/ResultCard';
 import MapComponent from '../components/MapComponent';
 import { generateSortedList, applyTimings, STARTING_POINTS, generateGoogleMapsUrl } from '../utils/plannerLogic';
 import { Download, Map as MapIcon, RotateCcw } from 'lucide-react';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import { jsPDF } from 'jspdf';
+import { toCanvas } from 'html-to-image';
 
 const Planner = () => {
     const { selectedPuja, currentTheme } = usePuja();
@@ -57,9 +57,9 @@ const Planner = () => {
         try {
             // Create a dedicated off-screen container for the PDF content
             const printContainer = document.createElement('div');
-            printContainer.style.position = 'fixed';
-            printContainer.style.top = '-9999px';
-            printContainer.style.left = '0';
+            printContainer.style.position = 'absolute';
+            printContainer.style.top = '0';
+            printContainer.style.left = '-9999px';
             printContainer.style.width = '800px'; // Fixed width for consistent high-res output
             printContainer.style.zIndex = '10000';
             printContainer.style.backgroundColor = '#ffffff';
@@ -152,12 +152,10 @@ const Planner = () => {
             // Using a small timeout to ensure DOM render cycle completes
             await new Promise(resolve => setTimeout(resolve, 100));
 
-            const canvas = await html2canvas(printContainer, {
-                scale: 2, // High resolution
-                useCORS: true,
-                logging: false,
+            const canvas = await toCanvas(printContainer, {
+                pixelRatio: 2, // High resolution
                 backgroundColor: '#ffffff',
-                windowWidth: 800
+                width: 800
             });
 
             document.body.removeChild(printContainer);
