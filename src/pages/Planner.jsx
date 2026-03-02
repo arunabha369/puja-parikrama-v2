@@ -8,7 +8,7 @@ import MapComponent from '../components/MapComponent';
 import { generateSortedList, applyTimings, STARTING_POINTS, generateGoogleMapsUrl } from '../utils/plannerLogic';
 import { Download, Map as MapIcon, RotateCcw } from 'lucide-react';
 import { jsPDF } from 'jspdf';
-import { toCanvas } from 'html-to-image';
+import { toPng } from 'html-to-image';
 
 const Planner = () => {
     const { selectedPuja, currentTheme } = usePuja();
@@ -57,11 +57,11 @@ const Planner = () => {
         try {
             // Create a dedicated off-screen container for the PDF content
             const printContainer = document.createElement('div');
-            printContainer.style.position = 'absolute';
+            printContainer.style.position = 'fixed';
             printContainer.style.top = '0';
-            printContainer.style.left = '-9999px';
+            printContainer.style.left = '0';
             printContainer.style.width = '800px'; // Fixed width for consistent high-res output
-            printContainer.style.zIndex = '10000';
+            printContainer.style.zIndex = '-9999'; // Hide behind other elements
             printContainer.style.backgroundColor = '#ffffff';
 
             // Calculate summaries
@@ -148,11 +148,14 @@ const Planner = () => {
 
             document.body.appendChild(printContainer);
 
-            // Wait for images or fonts if necessary (usually robust enough with timeout or check)
-            // Using a small timeout to ensure DOM render cycle completes
-            await new Promise(resolve => setTimeout(resolve, 100));
+            // Wait for images or fonts if necessary (usually robust enough with timeout)
+            // Using a slightly larger timeout to ensure DOM render cycle completes for fonts
+            await new Promise(resolve => setTimeout(resolve, 500));
 
-            const canvas = await toCanvas(printContainer, {
+            // Workaround for html-to-image blank output: warm up the renderer
+            await toPng(printContainer, { width: 800, pixelRatio: 1 }).catch(() => { });
+
+            const dataUrl = await toPng(printContainer, {
                 pixelRatio: 2, // High resolution
                 backgroundColor: '#ffffff',
                 width: 800
@@ -160,13 +163,17 @@ const Planner = () => {
 
             document.body.removeChild(printContainer);
 
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            // Get dimensions
+            const img = new Image();
+            img.src = dataUrl;
+            await new Promise(resolve => img.onload = resolve);
+
             const pdf = new jsPDF('p', 'mm', 'a4');
             const pdfWidth = pdf.internal.pageSize.getWidth();   // 210mm
             const pdfHeight = pdf.internal.pageSize.getHeight(); // 297mm
 
-            const imgWidth = canvas.width;
-            const imgHeight = canvas.height;
+            const imgWidth = img.naturalWidth;
+            const imgHeight = img.naturalHeight;
 
             const imgWidthMm = pdfWidth;
             const imgHeightMm = (imgHeight * pdfWidth) / imgWidth;
@@ -175,14 +182,14 @@ const Planner = () => {
             let position = 0;
 
             // First Page
-            pdf.addImage(imgData, 'JPEG', 0, position, imgWidthMm, imgHeightMm);
+            pdf.addImage(dataUrl, 'PNG', 0, position, imgWidthMm, imgHeightMm);
             heightLeft -= pdfHeight;
 
             // Multi-page
             while (heightLeft > 0) {
                 position = heightLeft - imgHeightMm;
                 pdf.addPage();
-                pdf.addImage(imgData, 'JPEG', 0, position, imgWidthMm, imgHeightMm);
+                pdf.addImage(dataUrl, 'PNG', 0, position, imgWidthMm, imgHeightMm);
                 heightLeft -= pdfHeight;
             }
 
